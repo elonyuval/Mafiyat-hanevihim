@@ -381,6 +381,69 @@ section { padding: 5.5rem 1.5rem; position: relative; }
   font-size: 0.9rem;
   box-shadow: var(--shadow);
 }
+
+/* Samboosak spotlight marquee */
+.samboosak-spotlight {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-width: 0;
+}
+.samboosak-spotlight .eyebrow { margin-bottom: 0; }
+.samboosak-spotlight h3 {
+  font-family: var(--font-display);
+  color: var(--ink-900);
+  font-size: clamp(1.3rem, 2.2vw, 1.7rem);
+  margin: 0;
+}
+.samboosak-spotlight p {
+  color: #4a3733;
+  font-size: 1rem;
+  margin: 0 0 0.2rem;
+}
+.marquee {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+  gap: 0.9rem;
+  padding: 0.9rem;
+  animation: marquee-scroll 22s linear infinite;
+}
+.marquee:hover .marquee-track { animation-play-state: paused; }
+.marquee-card {
+  position: relative;
+  flex: 0 0 auto;
+  width: 150px;
+  height: 190px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+.marquee-card img { width: 100%; height: 100%; object-fit: cover; }
+.marquee-card span {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  padding: 0.6rem 0.6rem 0.5rem;
+  background: linear-gradient(0deg, rgba(36,26,18,0.88), transparent);
+  color: var(--cream-50);
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+@keyframes marquee-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track { animation: none; }
+}
 .about-copy h2 { font-size: clamp(1.9rem, 3vw, 2.6rem); }
 .about-copy p { color: #4a3733; font-size: 1.05rem; margin-bottom: 1.2em; }
 
