@@ -29,11 +29,20 @@ document.addEventListener("DOMContentLoaded", () => {
   const MIN_SCALE = 1;
   const MAX_SCALE = 1.16;
 
-  const carousels = [...document.querySelectorAll(".marquee-track")].map((track) => ({
-    track,
-    cards: [...track.querySelectorAll(".marquee-card")],
-    lastScrollLeft: null,
-  }));
+  // Modern browsers get the coverflow effect entirely from CSS
+  // (animation-timeline: view()) — smoother than anything JS can do,
+  // since it runs on the compositor and never touches the main thread.
+  // Only run the JS fallback where that's unsupported.
+  const supportsScrollTimeline =
+    typeof CSS !== "undefined" && CSS.supports && CSS.supports("animation-timeline: view()");
+
+  const carousels = supportsScrollTimeline
+    ? []
+    : [...document.querySelectorAll(".marquee-track")].map((track) => ({
+        track,
+        cards: [...track.querySelectorAll(".marquee-card")],
+        lastScrollLeft: null,
+      }));
 
   if (carousels.length) {
     // A scroll-event-driven update lags behind the real scroll position during
