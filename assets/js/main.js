@@ -29,46 +29,49 @@ document.addEventListener("DOMContentLoaded", () => {
   const MIN_SCALE = 1;
   const MAX_SCALE = 1.16;
 
-  document.querySelectorAll(".marquee-track").forEach((track) => {
-    const cards = [...track.querySelectorAll(".marquee-card")];
-    let ticking = false;
+  const carousels = [...document.querySelectorAll(".marquee-track")].map((track) => ({
+    track,
+    cards: [...track.querySelectorAll(".marquee-card")],
+    lastScrollLeft: null,
+  }));
 
-    const update = () => {
-      ticking = false;
-      const trackRect = track.getBoundingClientRect();
-      const centerX = trackRect.left + trackRect.width / 2;
-      const maxDist = trackRect.width / 2 || 1;
-      let closest = null;
-      let closestDist = Infinity;
+  if (carousels.length) {
+    // A scroll-event-driven update lags behind the real scroll position during
+    // iOS momentum scrolling (-webkit-overflow-scrolling: touch fires "scroll"
+    // at a lower, uneven rate than the actual visual position), which reads as
+    // stutter/jitter. Polling every animation frame instead keeps the scale in
+    // sync with what's actually on screen regardless of how scroll events fire.
+    const tick = () => {
+      carousels.forEach(({ track, cards, lastScrollLeft }, i) => {
+        const sl = track.scrollLeft;
+        if (sl === lastScrollLeft) return;
+        carousels[i].lastScrollLeft = sl;
 
-      cards.forEach((card) => {
-        const r = card.getBoundingClientRect();
-        const cardCenter = r.left + r.width / 2;
-        const dist = Math.abs(cardCenter - centerX);
-        const t = Math.min(dist / maxDist, 1);
-        const scale = MAX_SCALE - t * (MAX_SCALE - MIN_SCALE);
-        card.style.transform = `scale(${scale.toFixed(3)})`;
-        if (dist < closestDist) {
-          closestDist = dist;
-          closest = card;
-        }
+        const trackRect = track.getBoundingClientRect();
+        const centerX = trackRect.left + trackRect.width / 2;
+        const maxDist = trackRect.width / 2 || 1;
+        let closest = null;
+        let closestDist = Infinity;
+        const positions = cards.map((card) => {
+          const r = card.getBoundingClientRect();
+          const cardCenter = r.left + r.width / 2;
+          const dist = Math.abs(cardCenter - centerX);
+          if (dist < closestDist) {
+            closestDist = dist;
+            closest = card;
+          }
+          return dist;
+        });
+        cards.forEach((card, idx) => {
+          const t = Math.min(positions[idx] / maxDist, 1);
+          const scale = MAX_SCALE - t * (MAX_SCALE - MIN_SCALE);
+          card.style.transform = `scale(${scale.toFixed(3)})`;
+          card.classList.toggle("is-active", card === closest);
+        });
       });
-
-      cards.forEach((card) => card.classList.toggle("is-active", card === closest));
+      requestAnimationFrame(tick);
     };
-
-    track.addEventListener(
-      "scroll",
-      () => {
-        if (!ticking) {
-          ticking = true;
-          requestAnimationFrame(update);
-        }
-      },
-      { passive: true }
-    );
-
-    window.addEventListener("resize", update);
-    requestAnimationFrame(update);
-  });
+    requestAnimationFrame(tick);
+    window.addEventListener("resize", () => carousels.forEach((c) => (c.lastScrollLeft = null)));
+  }
 });

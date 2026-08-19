@@ -436,7 +436,7 @@ section { padding: 5.5rem 1.5rem; position: relative; }
   overflow: hidden;
   scroll-snap-align: center;
   transform-origin: center center;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: box-shadow 0.2s ease;
   will-change: transform;
 }
 .marquee-card.is-active {
