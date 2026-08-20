@@ -171,7 +171,7 @@ section { padding: 5.5rem 1.5rem; position: relative; }
   color: var(--ink-900);
 }
 
-.brand .logo-mark { width: 52px; height: 52px; }
+.brand .logo-mark { height: 44px; width: auto; }
 
 .nav-links {
   display: flex;
@@ -318,6 +318,7 @@ section { padding: 5.5rem 1.5rem; position: relative; }
   inset: 8%;
   width: 84%;
   height: 84%;
+  object-fit: contain;
   filter: drop-shadow(0 30px 40px rgba(0,0,0,0.5));
 }
 @keyframes spin { to { transform: rotate(360deg); } }
@@ -663,7 +664,7 @@ section { padding: 5.5rem 1.5rem; position: relative; }
   font-size: 1.2rem;
   margin-bottom: 0.8rem;
 }
-.footer-brand .logo-mark { width: 42px; height: 42px; }
+.footer-brand .logo-mark { height: 56px; width: auto; }
 .footer-links { display: flex; justify-content: center; gap: 1rem; margin-bottom: 1.4rem; flex-wrap: wrap; }
 .brand-icon {
   display: inline-flex; align-items: center; justify-content: center;
